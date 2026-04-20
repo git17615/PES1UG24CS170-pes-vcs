@@ -101,7 +101,6 @@ int object_write(ObjectType type, const void *data, size_t len, ObjectID *id_out
     char header[64];
     int header_len = snprintf(header, sizeof(header), "%s %zu", type_str, len) + 1;
 
-    
     size_t total_len = header_len + len;
     char *buffer = malloc(total_len);
     if (!buffer) return -1;
@@ -140,9 +139,6 @@ int object_write(ObjectType type, const void *data, size_t len, ObjectID *id_out
 
     free(buffer);
     return 0;
-    
-    (void)type; (void)data; (void)len; (void)id_out;
-    return -1;
 }
 
 // Read an object from the store.
@@ -185,6 +181,7 @@ int object_read(const ObjectID *id, ObjectType *type_out, void **data_out, size_
         return -1;
     }
     fclose(f);
+
     ObjectID check;
     compute_hash(buffer, size, &check);
     if (memcmp(&check, id, sizeof(ObjectID)) != 0) {
